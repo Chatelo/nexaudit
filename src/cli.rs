@@ -15,6 +15,12 @@ pub enum Commands {
         /// Path to project (defaults to current dir)
         #[clap(short, long, default_value = ".")]
         path: String,
+    /// Output file path
+    #[clap(long, default_value = "nextaudit-report.json")]
+    output: String,
+    /// Output format: json or text
+    #[clap(long, default_value = "json")]
+    format: String,
     },
     /// Write or show collected implementations/docs
     Docs {
@@ -38,9 +44,9 @@ pub enum ConfigAction {
 impl Opts {
     pub fn run(self) -> Result<()> {
         match self.command {
-            Commands::Scan { path } => {
-                println!("Scanning: {}", path);
-                crate::engine::run_scan(&path)?;
+            Commands::Scan { path, output, format } => {
+                println!("Scanning: {} -> {} ({})", path, output, format);
+                crate::engine::run_scan(&path, &output, &format)?;
             }
             Commands::Docs { write } => {
                 if write {

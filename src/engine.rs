@@ -1,13 +1,13 @@
 use anyhow::Result;
 use tracing::info;
 
-pub fn run_scan(path: &str) -> Result<()> {
-    info!(%path, "starting scan");
+pub fn run_scan(path: &str, output: &str, format: &str) -> Result<()> {
+    info!(%path, %output, %format, "starting scan");
 
     // High-level orchestration: parse config, build graph, run rules, produce report
-    let _config = crate::config::Config::load(path)?;
-    let issues = crate::rules::run_all(path)?;
-    crate::reporter::emit_report(&issues)?;
+    let config = crate::config::Config::load(path)?;
+    let issues = crate::rules::run_all(path, &config)?;
+    crate::reporter::emit_report(&issues, output, format)?;
     Ok(())
 }
 

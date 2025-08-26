@@ -3,9 +3,17 @@ use serde::Deserialize;
 use std::fs;
 use std::path::Path;
 
+
 #[derive(Debug, Deserialize, Default)]
 pub struct Config {
     pub project: Option<Project>,
+    pub ignore: Option<Vec<String>>, // e.g. [".git", "target", "node_modules"]
+    pub thresholds: Option<Thresholds>,
+}
+
+#[derive(Debug, Deserialize, Default)]
+pub struct Thresholds {
+    pub large_file_kb: Option<u32>, // e.g. 200
 }
 
 #[derive(Debug, Deserialize)]
