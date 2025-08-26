@@ -16,6 +16,12 @@ pub enum Commands {
         #[clap(short, long, default_value = ".")]
         path: String,
     },
+    /// Write or show collected implementations/docs
+    Docs {
+        /// If set, write docs to disk (default: print path)
+        #[clap(short, long)]
+        write: bool,
+    },
     /// Print configuration schema or init a config
     Config {
         #[clap(subcommand)]
@@ -35,6 +41,14 @@ impl Opts {
             Commands::Scan { path } => {
                 println!("Scanning: {}", path);
                 crate::engine::run_scan(&path)?;
+            }
+            Commands::Docs { write } => {
+                if write {
+                    crate::docs::write_docs()?;
+                    println!("Wrote docs/implementations.md");
+                } else {
+                    println!("See docs/implementations.md in the project root.");
+                }
             }
             Commands::Config { action } => match action {
                 ConfigAction::Init => println!("Write a starter .nextaudit.toml"),

@@ -58,5 +58,33 @@ fn run_rules_for_file(path: &Path) -> Result<Vec<Issue>> {
         }
     }
 
+    // Security heuristic: usage of dangerouslySetInnerHTML in React code
+    if content.contains("dangerouslySetInnerHTML") {
+        issues.push(Issue {
+            id: "sec::dangerous_html".into(),
+            severity: "high".into(),
+            message: format!("{}: usage of dangerouslySetInnerHTML (possible XSS)", path.display()),
+        });
+    }
+
+    // Accessibility heuristic: <img> without alt attribute (basic check)
+    if ext.eq_ignore_ascii_case("html") || ext.eq_ignore_ascii_case("htm") || ext.eq_ignore_ascii_case("jsx") || ext.eq_ignore_ascii_case("tsx") {
+        for tag in content.match_indices("<img") {
+            // take a slice from the tag start to the next '>' to inspect attributes
+            if let Some(rest) = content.get(tag.0..) {
+                if let Some(end) = rest.find('>') {
+                    let tag_text = &rest[..end];
+                    if !tag_text.contains("alt=") {
+                        issues.push(Issue {
+                            id: "a11y::img_missing_alt".into(),
+                            severity: "warning".into(),
+                            message: format!("{}: <img> tag without alt attribute", path.display()),
+                        });
+                    }
+                }
+            }
+        }
+    }
+
     Ok(issues)
 }

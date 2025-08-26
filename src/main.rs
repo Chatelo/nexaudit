@@ -2,6 +2,7 @@ mod cli;
 mod config;
 mod engine;
 mod reporter;
+mod docs;
 mod rules;
 
 use tracing_subscriber::fmt::format::FmtSpan;
