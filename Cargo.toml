@@ -1,6 +1,19 @@
 [package]
 name = "nextaudit"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+description = "Next.js auditing CLI (prototype)"
+license = "MIT"
+repository = "https://example.com/nextaudit"
 
 [dependencies]
+clap = { version = "4.3", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.7"
+anyhow = "1.0"
+rayon = "1.6"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tokio = { version = "1.30", features = ["rt-multi-thread", "macros"] }
+serde_json = "1.0"
+walkdir = "2.3"
