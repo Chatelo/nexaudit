@@ -13,3 +13,32 @@ pub fn write_docs() -> Result<()> {
     fs::write(src, content)?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+    use std::fs;
+
+    #[test]
+    fn test_write_docs_creates_file() -> Result<()> {
+        let tmp = tempfile::tempdir()?;
+        let old = env::current_dir()?;
+        env::set_current_dir(tmp.path())?;
+
+        // Ensure docs dir does not exist initially
+        assert!(!Path::new("docs").exists());
+
+        write_docs()?;
+
+        // After write_docs, the file should exist
+        let p = Path::new("docs/implementations.md");
+        assert!(p.exists());
+        let content = fs::read_to_string(p)?;
+        assert!(content.contains("Rust CLI implementations and examples"));
+
+        // restore cwd
+        env::set_current_dir(old)?;
+        Ok(())
+    }
+}
