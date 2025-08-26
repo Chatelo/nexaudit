@@ -4,6 +4,9 @@ use std::fs;
 use std::path::Path;
 
 
+// Some fields are intentionally unused at the moment; allow dead_code to keep
+// the public config surface stable while the prototype evolves.
+#[allow(dead_code)]
 #[derive(Debug, Deserialize, Default)]
 pub struct Config {
     pub project: Option<Project>,
@@ -11,11 +14,13 @@ pub struct Config {
     pub thresholds: Option<Thresholds>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize, Default)]
 pub struct Thresholds {
     pub large_file_kb: Option<u32>, // e.g. 200
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct Project {
     pub router: Option<String>,
